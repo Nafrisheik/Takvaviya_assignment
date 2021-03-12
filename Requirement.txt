@@ -1,4 +1,4 @@
 The following are the dependencies for this project
-"dependencies": "ejs", "express, "os-utils,"socket.io"
+"dependencies": "ejs", "express, "os-utils,"socket.io","nodemailer".
 
 Have used Google charts for the front end.

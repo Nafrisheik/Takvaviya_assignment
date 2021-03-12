@@ -31,8 +31,23 @@ server.listen(3000,function(){
     },interval)
 
     //Sending Current Memory utilization with intervals of 1 sec.
+    let ram50=0;
     setInterval(()=>{
-        io.emit('Memory',(os.totalmem()-os.freemem())/os.totalmem()*100);    
+        let ramUtil =(os.totalmem()-os.freemem())/os.totalmem()*100;
+        if(ramUtil>50) {
+            ram50++;
+            if(ram50>10){
+                transporter.sendMail(options, function (err, info) {
+                    if (err) {
+                      console.log(err);
+                      return;
+                    }
+                    console.log("Sent" + info.response);
+                  });
+                  ram50=0;
+            } 
+        } else ram50=0;
+        io.emit('Memory',ramUtil); 
     },interval)
 })
 
@@ -47,4 +62,22 @@ function updateCpu(cpuLoad){
     }
 }
 
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "", //enter the sender mail id
+    pass: "",//enter the sender password
+  },
+});
+
+const options = {
+    from: "",//enter the sender mail id
+    
+    to: "nafrisheik@gmail.com",
+    subject: "RAM utilization exceed 50%",
+    text:
+      `You have exceeded 50% of Ram Utilization`,
+  };
 
