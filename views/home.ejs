@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <script
+      src="https://cdn.socket.io/3.1.1/socket.io.min.js"
+      integrity="sha384-gDaozqUvc4HTgo8iZjwth73C6dDDeOJsAgpxBcMpZYztUfjHXpzrpdrHRdVp8ySO"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      google.charts.load("current", {
+        packages: ["corechart", "line", "gauge"],
+      });
+      google.charts.setOnLoadCallback(drawBasic);
+      google.charts.setOnLoadCallback(drawChart);
+
+      var chartLoad = false;
+      var histogram = [];
+
+      function drawBasic() {
+        var data = new google.visualization.DataTable();
+        data.addColumn("number", "X");
+        data.addColumn("number", "CPU");
+
+        data.addRows(histogram);
+
+        var options = {
+          hAxis: {
+            title: "Time(In Seconds)",
+          },
+          vAxis: {
+            title: "CPU Utilization(%)",
+          },
+        };
+
+        var chart = new google.visualization.LineChart(
+          document.getElementById("chart_div")
+        );
+
+        chart.draw(data, options);
+        chartLoad = true;
+      }
+
+      function drawChart(memory) {
+        var data = google.visualization.arrayToDataTable([
+          ["Label", "Value"],
+          ["Memory", memory],
+        ]);
+
+        var options = {
+          width: 500,
+          height: 800,
+          redFrom: 90,
+          redTo: 100,
+          yellowFrom: 50,
+          yellowTo: 90,
+          minorTicks: 10,
+        };
+
+        var chart = new google.visualization.Gauge(
+          document.getElementById("chart_div1")
+        );
+
+        // chart.draw(data, options);
+
+        // setInterval(function () {
+          data.setValue(0, 1, memory);
+          chart.draw(data, options);
+        // }, 1000);
+      }
+      var socket = io();
+      socket.on("Memory", (ramConsume) => {
+          console.log(Math.round(ramConsume));
+        drawChart(Math.round(ramConsume));
+      });
+
+      socket.on("histogram", (cpuHistogram) => {
+        // console.log(cpuHistogram);
+        histogram = cpuHistogram;
+
+        if (chartLoad) drawBasic();
+      });
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 1700px; height: 450px"></div>
+    <div id="chart_div1" style="width: 400px; height: 120px"> RAM Memory</div>
+  </body>
+</html>
