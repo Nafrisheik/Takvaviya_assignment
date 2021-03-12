@@ -34,6 +34,7 @@ server.listen(3000,function(){
     let ram50=0;
     setInterval(()=>{
         let ramUtil =(os.totalmem()-os.freemem())/os.totalmem()*100;
+        //if Ram exceeds 50% for more than 10 seconds, this will initiate a mail
         if(ramUtil>50) {
             ram50++;
             if(ram50>10){
@@ -62,8 +63,10 @@ function updateCpu(cpuLoad){
     }
 }
 
+//package for sending email
 const nodemailer = require("nodemailer");
 
+//create transporter and define your auth values
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -72,6 +75,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+//here you can define the content of the mail
 const options = {
     from: "",//enter the sender mail id
     
