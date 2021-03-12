@@ -1,0 +1,3 @@
+Instructions to Run the file:
+'nodemon' will run the file in backend.
+This will auto launch the front end part using view engine.
