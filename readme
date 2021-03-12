@@ -1,3 +1,8 @@
 Instructions to Run the file:
+Install nodejs
+Install nodemon-npm install -g nodemon
+
+After Cloning the git Repo,
+Install all the dependencies- npm i.
 'nodemon' will run the file in backend.
 This will auto launch the front end part using view engine.
