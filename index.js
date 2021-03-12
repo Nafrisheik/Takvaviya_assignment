@@ -20,6 +20,8 @@ server.listen(3000,function(){
     for(i=0;i<histogramLen;i++){
         cpuHistogram[i]=[i,0];
     }
+
+    //Sending rounded cpuusage value with intervals of 1 sec
     setInterval(()=>{
         os.cpuUsage((value)=>{
             updateCpu(Math.round(value*100))
@@ -28,14 +30,13 @@ server.listen(3000,function(){
         })
     },interval)
 
+    //Sending Current Memory utilization with intervals of 1 sec.
     setInterval(()=>{
-        io.emit('Memory',(os.totalmem()-os.freemem())/os.totalmem()*100);
-        // console.log((os.totalmem()-os.freemem())/os.totalmem()*100)
-    
+        io.emit('Memory',(os.totalmem()-os.freemem())/os.totalmem()*100);    
     },interval)
 })
 
-
+//Setting histogram array with the cpuLoad value and time from 0 to 60 secs.
 function updateCpu(cpuLoad){
     if(cpuHistogram.length>=histogramLen){
         cpuHistogram.shift();
