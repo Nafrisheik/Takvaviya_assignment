@@ -1,0 +1,4 @@
+The following are the dependencies for this project
+"dependencies": "ejs", "express, "os-utils,"socket.io"
+
+Have used Google charts for the front end.
